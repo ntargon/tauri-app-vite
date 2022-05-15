@@ -4,6 +4,9 @@ import { ref } from 'vue'
 defineProps<{ msg: string }>()
 
 const count = ref(0)
+const hoge = ref(1)
+
+const double_hoge = () => hoge.value *= 2;
 </script>
 
 <template>
@@ -27,6 +30,7 @@ const count = ref(0)
   </p>
 
   <button type="button" @click="count++">count is: {{ count }}</button>
+  <button type="button" @click="double_hoge">hoge is: {{ hoge }}</button>
   <p>
     Edit
     <code>components/HelloWorld.vue</code> to test hot module replacement.
