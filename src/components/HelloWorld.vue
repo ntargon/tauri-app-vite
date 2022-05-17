@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { invoke } from '@tauri-apps/api'
+import { emit, listen } from '@tauri-apps/api/event'
 
 defineProps<{ msg: string }>()
 
@@ -7,34 +9,34 @@ const count = ref(0)
 const hoge = ref(1)
 
 const double_hoge = () => hoge.value *= 2;
+const start_server = () => {
+  invoke('start_server')
+    .then((res)=> {
+      console.log(res);
+    })
+    .catch((err)=> {
+      console.log(err);
+    });
+};
+
+// listen to the `click` event and get a function to remove the event listener
+// there's also a `once` function that subscribes to an event and automatically unsubscribes the listener on the first event
+onMounted(() => {
+  listen('back-to-front', event => {
+    // event.event is the event name (useful if you want to use a single callback fn for multiple event types)
+    // event.payload is the payload object
+    console.log(event.payload);
+    count.value++;
+  })
+});
 </script>
 
 <template>
   <h1>{{ msg }}</h1>
 
-  <p>
-    Recommended IDE setup:
-    <a href="https://code.visualstudio.com/" target="_blank">VS Code</a>
-    +
-    <a href="https://github.com/johnsoncodehk/volar" target="_blank">Volar</a>
-  </p>
-
-  <p>See <code>README.md</code> for more information.</p>
-
-  <p>
-    <a href="https://vitejs.dev/guide/features.html" target="_blank">
-      Vite Docs
-    </a>
-    |
-    <a href="https://v3.vuejs.org/" target="_blank">Vue 3 Docs</a>
-  </p>
-
   <button type="button" @click="count++">count is: {{ count }}</button>
   <button type="button" @click="double_hoge">hoge is: {{ hoge }}</button>
-  <p>
-    Edit
-    <code>components/HelloWorld.vue</code> to test hot module replacement.
-  </p>
+  <button type="button" @click="start_server">start server</button>
 </template>
 
 <style scoped>
