@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import init, { greet, start } from 'wasm'
+import { onMounted } from 'vue';
 
-const hoge = () => {
-    init()
-        .then((_)=> {
-            greet();
-            start();
-        })
+
+const hoge =  async () => {
+    greet();
+    start();
 };
+
+onMounted(async () => {
+    await init();
+})
+
+
 </script>
 
 <template>
