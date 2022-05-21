@@ -4,10 +4,12 @@
 import HelloWorld from './components/HelloWorld.vue'
 import Canvas from './components/Canvas.vue'
 import Monitor from './components/Monitor.vue';
+import DragAndDropUploader from './components/DragAndDropUploader.vue';
 </script>
 
 <template>
   <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
+  <DragAndDropUploader />
   <Monitor />
   <Canvas />
 </template>
