@@ -9,17 +9,6 @@ const hoge = ref(1)
 
 const double_hoge = () => hoge.value *= 2;
 
-onMounted(() => {
-
-  invoke('start_server')
-    .then((res)=> {
-      console.log(res);
-    })
-    .catch((err)=> {
-      console.log(err);
-    });
-
-});
 </script>
 
 <template>

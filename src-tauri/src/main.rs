@@ -3,12 +3,19 @@
   windows_subsystem = "windows"
 )]
 
-use tauri::{generate_handler};
+use tauri::Manager;
+
 mod image_server;
 
 fn main() {
   tauri::Builder::default()
-    .invoke_handler(generate_handler![image_server::start_server])
+    .setup(|app| {
+
+      let app_handle = app.app_handle();
+      image_server::start_server(app_handle);
+
+      Ok(())
+    })
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
