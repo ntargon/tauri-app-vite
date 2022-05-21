@@ -6,10 +6,14 @@
 use std::{thread, time::Duration, sync::mpsc};
 use tauri::{generate_handler, Manager};
 
+mod image_server;
+
 fn main() {
   tauri::Builder::default()
     .setup(|app| {
       let (tx, rx) = mpsc::channel();
+
+      image_server::hello();
 
       // server (laser marker <-> tauri app)
       thread::spawn(move || {
