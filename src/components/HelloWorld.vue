@@ -1,13 +1,19 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { invoke } from '@tauri-apps/api'
+import { ref } from 'vue'
 
 defineProps<{ msg: string }>()
 
 const count = ref(0)
-const hoge = ref(1)
+const message = ref(0)
+const img_src = ref("")
 
-const double_hoge = () => hoge.value *= 2;
+const connection = new WebSocket("ws://127.0.0.1:54321")
+connection.onmessage = (e) => {
+  console.log(e);
+  const tmp = e.data as string;
+  message.value = tmp.length;
+  img_src.value = tmp;
+}
 
 </script>
 
@@ -15,7 +21,8 @@ const double_hoge = () => hoge.value *= 2;
   <h1>{{ msg }}</h1>
 
   <button type="button" @click="count++">count is: {{ count }}</button>
-  <button type="button" @click="double_hoge">hoge is: {{ hoge }}</button>
+  <h1>video</h1>
+  <img v-bind:src="'data:image/jpeg;base64,'+img_src" width="800" height="800"/>
 </template>
 
 <style scoped>

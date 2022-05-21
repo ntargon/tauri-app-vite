@@ -1,21 +1,30 @@
-use std::str::from_utf8;
 
 use serde::{Serialize, Deserialize};
 use tauri::{self, Manager, async_runtime::spawn};
-use tokio::net::TcpListener;
+use tokio::net::{TcpListener, TcpStream};
 use tokio_stream::StreamExt;
 use tokio_util::codec::{FramedRead, LengthDelimitedCodec};
+use tokio_tungstenite::{accept_async, tungstenite::Message};
+use futures::SinkExt;
+use base64;
 
 #[derive(Serialize, Deserialize, Clone)]
 struct Payload {
     message: String
 }
 
-pub fn start_server(app_handle: tauri::AppHandle) {
+pub fn start_server() {
     spawn( async move {
         println!("image server start server");
         let listener = TcpListener::bind("127.0.0.1:12345").await.unwrap();
+        let ws_listener = TcpListener::bind("127.0.0.1:54321").await.unwrap();
         println!("bind");
+
+        let (stream, _) = ws_listener.accept().await.unwrap();
+
+        let mut ws_stream = accept_async(stream).await.expect("msFailed to accept");
+        println!("accept ws");
+
         loop {
             let (client, _) = listener.accept().await.unwrap();
             println!("accept");
@@ -24,7 +33,7 @@ pub fn start_server(app_handle: tauri::AppHandle) {
                 match frame {
                     Ok(data) => {
                         println!("received: {:?}", data[0]);
-                        app_handle.emit_all("event-name", Payload {message: String::from_utf8((&data).to_vec()).unwrap()}).unwrap();
+                        ws_stream.send(Message::Text(base64::encode(data))).await.unwrap();
                     },
                     Err(err) => eprintln!("error: {:?}", err),
                 }

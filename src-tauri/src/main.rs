@@ -3,16 +3,13 @@
   windows_subsystem = "windows"
 )]
 
-use tauri::Manager;
-
 mod image_server;
 
 fn main() {
   tauri::Builder::default()
-    .setup(|app| {
+    .setup(|_app| {
 
-      let app_handle = app.app_handle();
-      image_server::start_server(app_handle);
+      image_server::start_server();
 
       Ok(())
     })
