@@ -3,15 +3,29 @@ import { ref } from 'vue'
 
 defineProps<{ msg: string }>()
 
-const count = ref(0)
+type Point = {
+  x: number, y: number
+};
 
+const count = ref(0)
+const points = ref<Array<Point>>([])
+
+const countUp = () => {
+  count.value++;
+  points.value.push(
+    {
+      x: count.value * count.value, y: count.value
+    }
+  );
+}
 
 </script>
 
 <template>
   <h1>{{ msg }}</h1>
 
-  <button type="button" @click="count++">count is: {{ count }}</button>
+  <button type="button" @click="countUp">count is: {{ count }}</button>
+  <p v-for="(point, index) in points">{{ point }} {{ index }}</p>
 </template>
 
 <style scoped>
