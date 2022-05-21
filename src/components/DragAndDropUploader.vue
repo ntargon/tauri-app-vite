@@ -15,7 +15,7 @@ listen('tauri://file-drop', event => {
     _dropFile();
     console.log(event.payload);
     new WebviewWindow('label', {
-      url: 'https://github.com/tauri-apps/tauri'
+      url: '/test'
     })
   }
 })
