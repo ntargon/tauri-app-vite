@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 defineProps<{ msg: string }>()
 
@@ -19,12 +19,24 @@ const countUp = () => {
   );
 }
 
+const saveCount = () => {
+  localStorage.setItem("count", count.value.toString());
+}
+
+onMounted(() => {
+  const countItem = localStorage.getItem("count");
+  if (countItem) {
+    count.value = JSON.parse(countItem);
+  }
+});
+
 </script>
 
 <template>
   <h1>{{ msg }}</h1>
 
   <button type="button" @click="countUp">count is: {{ count }}</button>
+  <button type="button" @click="saveCount">save</button>
   <p v-for="(point, index) in points">{{ point }} {{ index }}</p>
 </template>
 
